@@ -1,11 +1,17 @@
 # Write your code here :-)
 #!/usr/bin/env python3
 import pygame
+import pygame.camera
 from gtts import gTTS
 import os
 
 pygame.init()
+pygame.camera.init()
 pygame.joystick.init()
+size = (640,480)
+display = pygame.display.set_mode(size,0)
+cam = pygame.camera.Camera("/dev/video0", size)
+cam.start()
 
 def say(text):
     tts = gTTS(text=text, lang='en')
@@ -32,6 +38,9 @@ loop = pygame.mixer.Sound("/home/pi/gpio-music-box/samples/loop_amen_full.wav")
 
 done = False
 while not done:
+    image = cam.get_image()
+    display.blit(image, (0,0))
+    pygame.display.flip()
     # EVENT PROCESSING STEP
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
